@@ -26,28 +26,32 @@ def information():
 #  if it's a POST request process the submitted data
 #  but if it's a GET request, just show the form
 #------------------------------------------------------------
-@app.route('/new', methods = ['POST', 'GET'])
+@app.route('/new', methods=['POST', 'GET'])
 def create_buggy():
     if request.method == 'GET':
         return render_template("buggy-form.html")
     elif request.method == 'POST':
-        msg=""
-        qty_wheels = request.form['qty_wheels']
-        try:
-            with sql.connect(DATABASE_FILE) as con:
-                cur = con.cursor()
-                cur.execute(
-                    "UPDATE buggies set qty_wheels=? WHERE id=?",
-                    (qty_wheels, DEFAULT_BUGGY_ID)
-                )
-                con.commit()
-                msg = "Record successfully saved"
-        except:
-            con.rollback()
-            msg = "error in update operation"
-        finally:
-            con.close()
-        return render_template("updated.html", msg = msg)
+        msg = ""
+        qty_wheels = request.form.get('qty_wheels')
+        if not qty_wheels or not qty_wheels.isdigit():
+            msg = "Invalid input. Please enter an integer value."
+        else:
+            try:
+                qty_wheels = int(qty_wheels)
+                if qty_wheels < 4:
+                    msg = "Invalid input. Please enter an integer of at least 4."
+                else:
+                    with sql.connect(DATABASE_FILE) as con:
+                        cur = con.cursor()
+                        cur.execute(
+                            "UPDATE buggies SET qty_wheels=? WHERE id=?",
+                            (qty_wheels, DEFAULT_BUGGY_ID)
+                        )
+                        con.commit()
+                        msg = "Record successfully saved"
+            except:
+                msg = "Error in the update operation"
+        return render_template("updated.html", msg=msg)
 
 #------------------------------------------------------------
 # a page for displaying the buggy
