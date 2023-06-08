@@ -1,0 +1,190 @@
+<h1> 
+    Information
+</h1>    
+<h2>
+    Buggy Specification
+</h2>
+<style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+  
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+  
+    th {
+      background-color: #f2f2f2;
+    }
+  
+    .highlight {
+      background-color: #ffff99;
+    }
+  </style>
+  
+  <table>
+    <tr>
+      <th>Item</th>
+      <th>Description/rules</th>
+      <th>Cost</th>
+      <th>JSON name</th>
+      <th>Default value</th>
+      <th>Value</th>
+    </tr>
+    <tr>
+      <td>Number of wheels</td>
+      <td>The more wheels, the more traction. But more importantly, quantity of wheels is also a measure of the buggy's size, so an indicator of strength. The chassis of a heavy buggy with too few wheels might break.<br>To put it another way, if you add a lot of mass to your buggy, you'll need to add extra pairs of wheels.<br>Wheels are free: you pay for the tyres.<br>Must be even.</td>
+      <td>—</td>
+      <td>qty_wheels</td>
+      <td>4</td>
+      <td>integer<br>>= 4</td>
+    </tr>
+    <tr>
+      <td>Primary motive power</td>
+      <td>The main source of motive power that moves your buggy forward.<br>See power table for details.<br>Must not be none.</td>
+      <td>varies, per unit</td>
+      <td>power_type</td>
+      <td>petrol</td>
+      <td>bio, electric, fusion, hamster, none, petrol, rocket, solar, steam, thermo, wind</td>
+    </tr>
+    <tr>
+      <td>Primary motive power units</td>
+      <td>The quantity of primary motive power units. For consumable fuel types, this could be quite high; for large expensive types (e.g., nuclear reactors), it may be singular.<br>Consumable power units are depleted during the race: your buggy gets lighter but you risk running out of fuel.<br>1 unit of petrol might not get you very far.</td>
+      <td>—</td>
+      <td>power_units</td>
+      <td>1</td>
+      <td>integer<br>>= 1</td>
+    </tr>
+    <tr>
+      <td>Auxiliary motive power</td>
+      <td>The backup plan for motive power for your buggy. You'll only need this if your primary motive power fails catastrophically or it runs out of fuel.<br>You don't need a backup. Nobody needs a backup. Until they do.<br>See power table for details.</td>
+      <td>varies, per unit</td>
+      <td>aux_power_type</td>
+      <td>none</td>
+      <td>bio, electric, fusion, hamster, none, petrol, rocket, solar, steam, thermo, wind</td>
+    </tr>
+    <tr>
+      <td>Auxiliary motive power units</td>
+      <td>The quantity of auxiliary motive power units.<br>Consumable power units are depleted during the race.</td>
+      <td>—</td>
+      <td>aux_power_units</td>
+      <td>0</td>
+      <td>integer<br>>= 0</td>
+    </tr>
+    <tr>
+      <td>Hamster booster</td>
+      <td>Steroids for hamsters.<br>Only effective if you have hamster motive power.<br>Cost is per booster.<br>Hamsters can multiboost.</td>
+      <td>5</td>
+      <td>hamster_booster</td>
+      <td>0</td>
+      <td>integer</td>
+    </tr>
+    <tr>
+      <td>Flag's colour</td>
+      <td>Racing buggies must fly a pennant so they can be recognized by the spectators and the race commentators. This is the primary colour of the buggy's pennant.<br>Note: American spelling of color!</td>
+      <td>—</td>
+      <td>flag_color</td>
+      <td>white</td>
+      <td>CSS-colour:<br>example: #ff0000 or red</td>
+    </tr>
+    <tr>
+      <td>Flag's pattern</td>
+      <td>The pattern on the buggy's pennant. Every pattern except plain needs two colours (a primary colour and a secondary). Stripes may be vertical, horizontal, or diagonal.</td>
+      <td>—</td>
+      <td>flag_pattern</td>
+      <td>plain</td>
+      <td>check, dstripe, hstripe, plain, spot, vstripe</td>
+    </tr>
+    <tr>
+      <td>Flag's other colour</td>
+      <td>The other colour of the buggy's pennant, if its pattern has two.<br>Must be different from flag_color (unless pattern is plain).<br>Note: American spelling of color!</td>
+      <td>—</td>
+      <td>flag_color_secondary</td>
+      <td>black</td>
+      <td>CSS-colour:<br>example: #ff0000 or red</td>
+    </tr>
+    <tr>
+      <td>Type of tyres</td>
+      <td>The type of tyres. Appropriate for different conditions and budgets.<br>You can only carry one type of tyre (that is, for all your tyres) in any race.<br>See tyre table for details.</td>
+      <td>varies, per unit</td>
+      <td>tyres</td>
+      <td>knobbly</td>
+      <td>knobbly, maglev, reactive, slick, steelband</td>
+    </tr>
+    <tr>
+      <td>Number of tyres</td>
+      <td>The number of tyres (includes spares).<br>Must be equal to or greater than the number of wheels</td>
+      <td>—</td>
+      <td>qty_tyres</td>
+      <td>4</td>
+      <td>integer >= qty_wheels</td>
+    </tr>
+    <tr>
+      <td>Armour</td>
+      <td>The predominant protection carried by the buggy. A triple-trade-off between safety, encumbrance, and cost.<br>Only needed if other buggies come equipped for hostilities. Surely nobody brings weapons to a race, right?<br>See armour table for details.</td>
+      <td>varies</td>
+      <td>armour</td>
+      <td>none</td>
+      <td>aluminium, none, thicksteel, thinsteel, titanium, wood</td>
+    </tr>
+    <tr>
+      <td>Offensive capability</td>
+      <td>Just in case you think you'll win better if you can also spoil other buggies' days, some weapons are available. All can cause operational damage or punctures.<br>Options are classic spikes, flame throwers, electric lances, or infectious spores.<br>All except spikes carry a risk of karmic self-injury.<br>See attack table for details.</td>
+      <td>varies, per unit</td>
+      <td>attack</td>
+      <td>none</td>
+      <td>biohazard, charge, flame, none, spike</td>
+    </tr>
+    <tr>
+      <td>Number of attacks</td>
+      <td>Every attack is an opportunity to be kind, wasted.<br>This is the maximum number of attacks that will be attempted during the race.</td>
+      <td>—</td>
+      <td>qty_attacks</td>
+      <td>0</td>
+      <td>integer >= 0</td>
+    </tr>
+    <tr>
+      <td>Fireproof?</td>
+      <td>Is the buggy coated with fire-retardant paint?</td>
+      <td>70</td>
+      <td>fireproof</td>
+      <td>false</td>
+      <td>Boolean</td>
+    </tr>
+    <tr>
+      <td>Insulated?</td>
+      <td>Is the buggy protected with a rubber mesh protecting itself from electric lance attacks?</td>
+      <td>100</td>
+      <td>insulated</td>
+      <td>false</td>
+      <td>Boolean</td>
+    </tr>
+    <tr>
+      <td>Antibiotic?</td>
+      <td>Is the buggy equipped with the latest defenses against virulent biohazards and nasty scratches?</td>
+      <td>90</td>
+      <td>antibiotic</td>
+      <td>false</td>
+      <td>Boolean</td>
+    </tr>
+    <tr>
+      <td>Banging sound system?</td>
+      <td>Is the buggy wired up with some decent lungs for blasting motivational rock during the more demanding sections of the race?</td>
+      <td>42</td>
+      <td>banging</td>
+      <td>false</td>
+      <td>Boolean</td>
+    </tr>
+    <tr>
+      <td>Race computer algorithm</td>
+      <td>Yes, your buggy has a race computer. The primary behavioral characteristic of the program that is loaded affects how it interacts with the other vehicles around it.<br>Don't start with "buggy". Buggy is what happens when your race computer goes wrong: it's not a state you choose.<br>Must not be buggy.<br>See algorithm table for details.</td>
+      <td>—</td>
+      <td>algo</td>
+      <td>steady</td>
+      <td>buggy, defensive, offensive, random, steady, titfortat</td>
+    </tr>
+  </table>
+  
