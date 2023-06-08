@@ -17,6 +17,10 @@ BUGGY_RACE_SERVER_URL = "https://rhul.buggyrace.net"
 def home():
     return render_template('index.html', server_url=BUGGY_RACE_SERVER_URL)
 
+@app.route('/info')
+def information():
+    return render_template("info.html")
+
 #------------------------------------------------------------
 # creating a new buggy:
 #  if it's a POST request process the submitted data
@@ -88,3 +92,4 @@ def summary():
 if __name__ == '__main__':
     alloc_port = os.environ.get('CS1999_PORT') or 5000
     app.run(debug=True, host="0.0.0.0", port=alloc_port)
+
