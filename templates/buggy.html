@@ -2,25 +2,37 @@
 
 {% block content %}
 
-  <h1>Buggy</h1>
+  <h1>Buggies</h1>
 
-  <table>
-    <tr>
-      <td>ID:</td> <td> {{ buggy['id'] }} </td>
-    </tr>
-    <tr>
-      <td>Wheels:</td> <td> {{ buggy['qty_wheels'] }} </td>
-    </tr>
-    <tr>
-      <td>Flag Colour:</td> <td> {{ buggy['flag_color'] }} </td>
-    </tr>
-    <tr>
-      <td>Total Cost:</td> <td> {{ total_cost }} </td>
-    </tr>
-  </table>
+  {% for buggy in buggies %}
+    <table>
+      <tr>
+        <td>ID:</td> <td>{{ buggy['id'] }}</td>
+      </tr>
+      <tr>
+        <td>Wheels:</td> <td>{{ buggy['qty_wheels'] }}</td>
+      </tr>
+      <tr>
+        <td>Flag Colour:</td> <td>{{ buggy['flag_color'] }}</td>
+      </tr>
+      <tr>
+        <td>Total Cost:</td> <td>{{ buggy['total_cost'] }}</td>
+      </tr>
+      <tr>
+        <td>Delete:</td>
+        <td>
+          <form action="/delete/{{ buggy['id'] }}" method="post">
+            <button type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    </table>
+    <br>
+  {% endfor %}
 
   <p>
-    <a href="/" class="button">home</a>
+    <a href="/" class="button">Home</a>
   </p>
 
 {% endblock %}
+

@@ -87,28 +87,33 @@ def create_buggy():
         total_cost = calculate_total_cost(qty_wheels)
                
         try:
-            print("Attempting to connect to the database:", DATABASE_FILE)
             with sql.connect(DATABASE_FILE) as con:
-                print("Connected to the database:", DATABASE_FILE)
                 cur = con.cursor()
-
-                try:
-                    cur.execute(
-                        "UPDATE buggies SET qty_wheels=?, flag_color=?, total_cost=? WHERE id=?",
-                        (qty_wheels, flag_color, total_cost, DEFAULT_BUGGY_ID)
-                    )
-                    con.commit()
-                    msg = "Record successfully saved"
-                except Exception as e:
-                    con.rollback()
-                    msg = "Error in the update operation: " + str(e)
-        
-
-
+                cur.execute(
+                    "INSERT INTO buggies  (qty_wheels, flag_color, cost_limit, total_cost) VALUES(?, ?, ?, ?)",
+                    (qty_wheels, flag_color, cost_limit, calculate_total_cost(qty_wheels))
+                )
+                con.commit()
+                msg = "Record successfully saved"
         except sql.Error as e:
             msg = "Error connecting to the database: " + str(e)
               
         return render_template("updated.html", msg=msg)
+
+@app.route('/buggy/<int:buggy_id>')
+def show_buggy(buggy_id):
+    con = sql.connect(DATABASE_FILE)
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute("SELECT * FROM buggies WHERE id=?", (buggy_id,))
+    record = cur.fetchone()
+    con.close()
+
+    if record:
+        total_cost = calculate_total_cost(record['qty_wheels'])
+        return render_template("buggy.html", buggy=record, total_cost=total_cost)
+    else:
+        return "Buggy not found"
 
 def calculate_total_cost(qty_wheels):
      cost_qty_wheels = 10
@@ -140,15 +145,11 @@ def show_buggies():
     con = sql.connect(DATABASE_FILE)
     con.row_factory = sql.Row
     cur = con.cursor()
-    cur.execute("SELECT * FROM buggies WHERE id=?", (DEFAULT_BUGGY_ID,))
-    record = cur.fetchone();
+    cur.execute("SELECT * FROM buggies")
+    buggies = cur.fetchall()
     con.close()
 
-    qty_wheels = record['qty_wheels'] 
-
-    total_cost = calculate_total_cost(qty_wheels)
-
-    return render_template("buggy.html", buggy = record, total_cost=total_cost)
+    return render_template("buggy.html", buggies=buggies)
 
 #------------------------------------------------------------
 # a placeholder page for editing the buggy: you'll need
@@ -171,6 +172,22 @@ def edit_buggy():
         return render_template("buggy-form.html", qty_wheels=qty_wheels, flag_color=flag_color, record=record)
     except:
          return "An error  occurred while fetching the buggy information."
+
+@app.route('/delete/<int:buggy_id>', methods=['POST'])
+def delete_buggy(buggy_id):
+    try:
+        with sql.connect(DATABASE_FILE) as con:
+            cur = con.cursor()
+            cur.execute("DELETE FROM buggies WHERE id=?", (buggy_id,))
+            con.commit()
+            msg = "Buggy deleted successfully"
+    except sql.Error as e:
+        msg = "Error deleting buggy: " + str(e)
+    
+    return msg
+
+
+          
 
 @app.route('/poster')
 def poster():
