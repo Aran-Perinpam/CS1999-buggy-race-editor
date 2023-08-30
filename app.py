@@ -26,32 +26,80 @@ def information():
 #  if it's a POST request process the submitted data
 #  but if it's a GET request, just show the form
 #------------------------------------------------------------
+
 @app.route('/new', methods=['POST', 'GET'])
 def create_buggy():
     if request.method == 'GET':
-        return render_template("buggy-form.html")
+        return render_template("buggy-form.html", msg="")
+   
     elif request.method == 'POST':
         msg = ""
         qty_wheels = request.form.get('qty_wheels')
-        if not qty_wheels or not qty_wheels.isdigit():
-            msg = "Invalid input. Please enter an integer value."
-        else:
-            try:
-                qty_wheels = int(qty_wheels)
-                if qty_wheels < 4:
-                    msg = "Invalid input. Please enter an integer of at least 4."
-                else:
-                    with sql.connect(DATABASE_FILE) as con:
-                        cur = con.cursor()
-                        cur.execute(
-                            "UPDATE buggies SET qty_wheels=? WHERE id=?",
-                            (qty_wheels, DEFAULT_BUGGY_ID)
-                        )
-                        con.commit()
-                        msg = "Record successfully saved"
-            except:
-                msg = "Error in the update operation"
+        flag_color = request.form.get('flag_color')
+
+        try:
+            qty_wheels = int(qty_wheels)
+            if qty_wheels % 2 != 0:
+                 msg = "Invalid input. The quantity of wheels must be even."
+                 return render_template("buggy-form.html", msg=msg)  
+
+            if qty_wheels < 4:
+                 msg = "Invalid input. The quantity of wheels must be equal to or above 4."
+                 return render_template("buggy-form.html", msg=msg)
+            
+        except ValueError:
+                msg = "Invalid input. Please enter an integer for the quantity of wheels."
+                return render_template("buggy-form.html", msg=msg)    
+        
+        if flag_color.isdigit() or len(flag_color) <= 1:
+                msg = "Invalid input. Please enter a valid colour not an integer for the Colour of flag."
+                return render_template("buggy-form.html", msg=msg)
+        
+        total_cost = calculate_total_cost(qty_wheels)
+               
+        try:
+            print("Attempting to connect to the database:", DATABASE_FILE)
+            with sql.connect(DATABASE_FILE) as con:
+                print("Connected to the database:", DATABASE_FILE)
+                cur = con.cursor()
+                
+                try:
+                    cur.execute(
+                       "UPDATE buggies SET qty_wheels=?, flag_color=?, total_cost=? WHERE id=?",
+                       (qty_wheels, flag_color, total_cost, DEFAULT_BUGGY_ID)
+                    )
+                    con.commit()
+                    msg = "Record successfully saved"
+                except:
+                    con.rollback()
+                    msg = "Error in the update operation"
+
+        except sql.Error as e:
+            msg = "Error connecting to the database: " + str(e)
+                
         return render_template("updated.html", msg=msg)
+
+def calculate_total_cost(qty_wheels):
+     cost_qty_wheels = 10
+     cost_flag = 20
+
+     total_cost = (cost_qty_wheels * qty_wheels) + cost_flag
+     return total_cost
+
+def update_total_cost(buggy_id, total_cost):
+     try:
+          with sql.connect(DATABASE_FILE) as con:
+               cur = con.cursor()
+               cur.execute("UPDATE buggies SET total_cost=? WHERE id=?", (total_cost, buggy_id))
+               con.commit()
+               msg = "Total cost updated successfully"
+     except:
+          con.rollback()
+          msg = "Error updating total cost"
+     finally:
+          con.close()
+    
+     return msg
 
 #------------------------------------------------------------
 # a page for displaying the buggy
@@ -61,9 +109,15 @@ def show_buggies():
     con = sql.connect(DATABASE_FILE)
     con.row_factory = sql.Row
     cur = con.cursor()
-    cur.execute("SELECT * FROM buggies")
-    record = cur.fetchone(); 
-    return render_template("buggy.html", buggy = record)
+    cur.execute("SELECT * FROM buggies WHERE id=?", (DEFAULT_BUGGY_ID,))
+    record = cur.fetchone();
+    con.close()
+
+    qty_wheels = record['qty_wheels'] 
+
+    total_cost = calculate_total_cost(qty_wheels)
+
+    return render_template("buggy.html", buggy = record, total_cost=total_cost)
 
 #------------------------------------------------------------
 # a placeholder page for editing the buggy: you'll need
@@ -71,8 +125,21 @@ def show_buggies():
 #------------------------------------------------------------
 @app.route('/edit')
 def edit_buggy():
-    return render_template("buggy-form.html")
+    try:
+        con = sql.connect(DATABASE_FILE)
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT * FROM buggies WHERE id=?", (DEFAULT_BUGGY_ID,))
+        record = cur.fetchone()
 
+        qty_wheels = record['qty_wheels']
+        flag_color = record['flag_color']
+
+        con.close()
+
+        return render_template("buggy-form.html", qty_wheels=qty_wheels, flag_color=flag_color, record=record)
+    except:
+         return "An error  occurred while fetching the buggy information."
 #------------------------------------------------------------
 # You probably don't need to edit this... unless you want to ;)
 #

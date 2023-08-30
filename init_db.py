@@ -1,6 +1,9 @@
 import sqlite3
+import os
 
-DATABASE_FILE = "database.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+DATABASE_FILE = os.path.join(BASE_DIR, "database.db")
 
 #-----------------------------------------------------------------------------
 # This script initialises your SQLite database for you, just to get you
@@ -19,13 +22,18 @@ print(f"- Opened database successfully in file \"{DATABASE_FILE}\"")
 # using Python's triple-quote for multi-line strings:
 
 connection.execute("""
+  DROP TABLE buggies                
+""")
+
+connection.execute("""
 
   CREATE TABLE IF NOT EXISTS buggies (
     id                    INTEGER PRIMARY KEY,
     qty_wheels            INTEGER DEFAULT 4,
     flag_color            VARCHAR(20),
     flag_color_secondary  VARCHAR(20),
-    flag_pattern          VARCHAR(20)
+    flag_pattern          VARCHAR(20),
+    total_cost            INTEGER DEFAULT 6
   )
 
 """)

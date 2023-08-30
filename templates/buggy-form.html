@@ -3,21 +3,36 @@
 {% block content %}
 
   <h1>Make buggy</h1>
+  <h3>For more information about individual buggy data, head to the infomation tab on the home screen.</h3>
 
-  <form action="/new" method="post">
-    <label for="qty_wheels">Number of wheels:</label>
-    <input type="text" name="qty_wheels" />
-    <input type="submit" class="button">
+  <form action="/new" method="post" class="buggy-form">
+    <div class="form-group">
+      <label for="qty_wheels">Number of wheels:</label>
+      <input type="number" name="qty_wheels" value="{{ qty_wheels }}" class="form-control" required>
+      <br>
+      <small class="form-text text-muted">Must be an even number and above or equal to 4</small>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="form-group">
+      <label for="flag_color">Colour of flag:</label>
+      <input type="text" name="flag_color" value="{{ flag_color }}" class="form-control" required>
+      <br>
+      <small class="form-text text-muted">Must be a vaild Colour</small>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="form-group">
+      <input type="submit" class="button" value="Submit">
+      <a href="/" class="button">home</a>
+    </div>
   </form>
 
-  <form action="/new" method="post">
-    <label for="flag_color">Colour of the flag:</label>
-    <input type="text" name="flag_color" />
-    <input type="submit" class="button">
-  </form>
+  <p class="error-msg">{{ msg }}</p>
+  
 
-  <p>
-    <a href="/" class="button">home</a>
-  </p>
 
 {% endblock %}
+
