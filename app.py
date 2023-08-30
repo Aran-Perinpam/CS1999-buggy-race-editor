@@ -36,6 +36,35 @@ def create_buggy():
         msg = ""
         qty_wheels = request.form.get('qty_wheels')
         flag_color = request.form.get('flag_color')
+        cost_limit = request.form.get('cost_limit')
+
+        if not cost_limit:
+             cost_limit = 0
+
+        if 'fill_entries' in request.form:
+            if cost_limit and cost_limit.strip():
+                try:
+                    cost_limit = float(cost_limit)
+                except ValueError:
+                    msg = "Invalid input. Please enter a valid number for the cost limit."
+                    return render_template("buggy-form.html", msg=msg)
+             
+                if cost_limit < 0:
+                    msg = "Invalid input. Cost limit cannot be negative."
+                    return render_template("buggy-form.html", msg=msg)
+             
+                qty_wheels  = max(4, int(cost_limit // 10))
+                total_cost = calculate_total_cost(qty_wheels)
+                while total_cost > cost_limit:
+                    qty_wheels = max(4, qty_wheels - 2)
+                    total_cost = calculate_total_cost(qty_wheels)
+                flag_color = "red"
+            else:
+                 msg = "Please enter a value for the cost limit before using Fill Entries"
+                 return render_template("buggy-form.html", msg=msg)
+        
+        print("Qty wheels:", qty_wheels)
+        print("Flag colour:", flag_color)
 
         try:
             qty_wheels = int(qty_wheels)
@@ -62,21 +91,23 @@ def create_buggy():
             with sql.connect(DATABASE_FILE) as con:
                 print("Connected to the database:", DATABASE_FILE)
                 cur = con.cursor()
-                
+
                 try:
                     cur.execute(
-                       "UPDATE buggies SET qty_wheels=?, flag_color=?, total_cost=? WHERE id=?",
-                       (qty_wheels, flag_color, total_cost, DEFAULT_BUGGY_ID)
+                        "UPDATE buggies SET qty_wheels=?, flag_color=?, total_cost=? WHERE id=?",
+                        (qty_wheels, flag_color, total_cost, DEFAULT_BUGGY_ID)
                     )
                     con.commit()
                     msg = "Record successfully saved"
-                except:
+                except Exception as e:
                     con.rollback()
-                    msg = "Error in the update operation"
+                    msg = "Error in the update operation: " + str(e)
+        
+
 
         except sql.Error as e:
             msg = "Error connecting to the database: " + str(e)
-                
+              
         return render_template("updated.html", msg=msg)
 
 def calculate_total_cost(qty_wheels):

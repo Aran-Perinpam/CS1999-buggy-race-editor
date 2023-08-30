@@ -4,16 +4,15 @@
 
   <h1>Make buggy</h1>
   <h3>For more information about individual buggy data, head to the infomation tab on the home screen.</h3>
+  <p>Fill in the details below to create or edit a buggy.</p>
 
   <form action="/new" method="post" class="buggy-form">
     <div class="form-group">
       <label for="qty_wheels">Number of wheels:</label>
-      <input type="number" name="qty_wheels" value="{{ qty_wheels }}" class="form-control" required>
+      <input type="number" name="qty_wheels" value="{% if 'fill_entries' in request.form %} {{ max(4, cost_limit//10 )|int }} {% else %} {{ qty_wheels }} {% endif %}" class="form-control" required>
       <br>
       <small class="form-text text-muted">Must be an even number and above or equal to 4</small>
     </div>
-    <br>
-    <br>
     <br>
     <div class="form-group">
       <label for="flag_color">Colour of flag:</label>
@@ -22,7 +21,15 @@
       <small class="form-text text-muted">Must be a vaild Colour</small>
     </div>
     <br>
-    <br>
+    <div class="form-group">
+      <input type="submit" name="fill_entries" class="button" value="Fill Entries" formnovalidate>
+    </div>
+    <div class="form-group">
+      <label for="cost_limit">Cost Limit:</label>
+      <input type="number" name="cost_limit" class="form-control">
+      <br>
+      <small class="form-text text-muted">Only fill out this box if you want to use the Fill Entries button.</small>
+    </div>
     <br>
     <div class="form-group">
       <input type="submit" class="button" value="Submit">
