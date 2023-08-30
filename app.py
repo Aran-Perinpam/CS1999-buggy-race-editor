@@ -171,6 +171,10 @@ def edit_buggy():
         return render_template("buggy-form.html", qty_wheels=qty_wheels, flag_color=flag_color, record=record)
     except:
          return "An error  occurred while fetching the buggy information."
+
+@app.route('/poster')
+def poster():
+     return render_template('poster.html')
 #------------------------------------------------------------
 # You probably don't need to edit this... unless you want to ;)
 #

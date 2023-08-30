@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .poster-tasks {
+    border-top: 2px solid #2c3e50;
+    margin-top: 4em;
+    padding-top: 2em;
+  }
+
+  .task {
+    margin: 2em;
+    padding: 2em;
+    border: 1px solid #95a5a6;
+    background-color: #ecf0f1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .task h2 {
+    color: #e74c3c;
+    border-bottom: 3px solid #d35400;
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .task p {
+    color: #34495e;
+    font-size: 1.1em;
+    line-height: 1.5;
+  }
+</style>
+
+<h1 style="color: #3498db; font-weight: bold; text-decoration: underline;">My Buggy Editor Log</h1>
+
+<section class="poster-tasks">
+<br>
+<img src="/static/Buggy image.jpg" alt="diagram"> 
+<br>
+<div class="task">
+    <h2>0-GET: Get the source code</h2>
+    <p>
+    I completed this task by logging into the buggy server with my login details, creating a new GitHub account and linking it to the server, forking the template to my GitHub account and then connected to the server in VScode.
+    </p>
+</div>
+<div class="task">
+    <h2>0-RUN: Get app running and view it in a browser</h2>
+    <p>
+    I did this task by running python app.py in my terminal.
+    </p>
+</div>
+<div class="task">
+    <h2>0-CHANGE: Make a change to a template and see it appear</h2>
+    <p>
+    I changed the text of H1 templates/index.html to say "Aran's buggy editor" as well as creating a smaller heading saying "Navigate the other sections of the editor using the buttons below."
+    </p>
+</div>
+<div class="task">
+    <h2>1-TEMPLATE: Add a new template to the app</h2>
+    <p>
+    I added info.html to the templates folder, which I had copied all of the tables of information into. I added the date of which the information was last taken across and also added a button to the index page to get to the info page.
+    </p>
+</div>
+<div class="task">
+    <h2>1-ADD: Add more data to the form</h2>
+    <p>
+    Added a Colour of the flag input in the buggy form
+    </p>
+</div>
+<div class="task">
+    <h2>1-VALID: Add basic data validation</h2>
+    <p>
+    I added a try catch to the app route in app.py, making sure that first the input is a integer, and then that the integer is equal or greater than 4
+    </p>
+</div>
+<div class="task">
+    <h2>1-STYLE: Style your editor just hw you like it</h2>
+    <p>
+    Changed values in app.css to change the style of the site. Made the site look more appealing in general.
+    </p>
+</div>
+<div class="task">
+    <h2>2-EDIT: Edit the record by loading its current values into the form</h2>
+    <p>
+    Added code into edit_buggy() to auto fill previous or current data into the forum to make it easier for the user to make adjustments to the buggy.
+    </p>
+</div>
+<div class="task">
+    <h2>2-FORM: Make the form better</h2>
+    <p>
+    I cleaned up the interface of the form, giving hints about what the user should input in each of the boxes, as well as buttons to increase or decrease the number of wheels. Also indications of what the user needs to fill in if they have not filled out the form correctly.
+    </p>
+</div>
+<div class="task">
+    <h2>2-COST: Calculate and save the game cost of the buggy</h2>
+    <p>
+    I added a total cost section to the database which is shown in the show buggy section of the editor. It calculates the cost of the buggy based on specification of buggy given by the user inputs.
+    </p>
+</div>
+<div class="task">
+    <h2>2-RULES: Add validation according to the game rules</h2>
+    <p>
+    I added game rules to my validation by using the mod function to my error check on the qty_wheels value, displaying an error message if the value is not divisible by 2. This makes it so the qty_wheels value will always be even.
+    </p>
+</div>
+<div class="task">
+    <h2>3-AUTOFILL: Add auto-fill to the edit forms</h2>
+    <p>
+    I added a button to the form so the user can autofill the edits on the buggy though setting a cost limit for the buggy. Also I prevented some possible errors with small error checks throughout.
+    </p>
+</div>
+
+<!-- this closes the section: keep it in! -->
+</section>
+
+{% endblock %}
+      
